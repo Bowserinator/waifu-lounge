@@ -1,5 +1,11 @@
 # TODO
 TODO.txt
+.vscode
+
+# Waifu generated output
+waifu_images/
+waifus.data
+waifus.yaml
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Node template
