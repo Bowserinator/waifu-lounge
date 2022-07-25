@@ -8,6 +8,7 @@ module.exports = {
         '@hellomouse/eslint-config'
     ],
     rules: {
+        'curly': ['error', 'multi-or-nest'],
         'vue/this-in-template': 'off',
         'vue/valid-v-slot': ['off'],
         'vue/script-setup-uses-vars': 'off',

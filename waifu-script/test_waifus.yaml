@@ -1,0 +1,99 @@
+name: S Rank
+series: 
+  - Series
+age: 1
+nicknames: Ultra-rare test
+height: Height
+rank: s
+images:
+  - https://i.imgur.com/sVTOjM4.png
+tags: tag
+---
+name: A Rank
+series: 
+  - Series
+nicknames: Elite test
+rank: a
+images:
+  - https://i.imgur.com/sVTOjM4.png
+tags:
+  - tag
+  - tag2
+  - tag3
+  - tag4
+  - tag5
+  - tag6
+  - tag7
+  - tag8
+  - tag9
+  - tag10
+---
+name: B Rank
+series: 
+  - Series
+  - Series2
+  - Series3
+  - Series4
+  - Series5
+  - Series6
+  - Series7
+nicknames: Rare test
+rank: b
+images:
+  - https://i.imgur.com/sVTOjM4.png
+---
+name: C Rank
+series: 
+  - Series
+nicknames: Common test
+rank: c
+images:
+  - https://i.imgur.com/sVTOjM4.png
+---
+name: D Rank
+series: 
+  - Series
+nicknames: Trash test
+rank: d
+images:
+  - https://i.imgur.com/sVTOjM4.png
+---
+name: E Rank
+series: 
+  - Series
+rank: e
+gender: M
+images:
+  - https://i.imgur.com/sVTOjM4.png
+---
+name: F (Unknown) Rank
+series: 
+  - Series
+nicknames: Unknown test
+rank: f
+gender: M
+images:
+  - https://i.imgur.com/sVTOjM4.png
+---
+name: No Nickname
+series: 
+  - Series
+rank: S
+images:
+  - https://i.imgur.com/sVTOjM4.png
+  - https://i.imgur.com/7ib6XnF.png
+---
+name: No Nickname 2
+series: 
+  - Series
+age:
+  - 1
+  - 2
+  - 3
+height: 1000cm
+birthday: 1/2/3
+rank: S
+gender: MF
+images:
+  - https://i.imgur.com/sVTOjM4.png
+  - https://i.imgur.com/7ib6XnF.png

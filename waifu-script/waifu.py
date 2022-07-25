@@ -25,15 +25,15 @@ class Waifu(object):
     :param yaml_doc: Decoded YAML document object for waifu
     """
     def __init__(self, yaml_doc):
-        if not "name" in yaml_doc or "series" not in yaml_doc:
-            print(f"Missing required properties ('name' and 'series') for {yaml_doc}")
+        if not "name" in yaml_doc or "series" not in yaml_doc or "images" not in yaml_doc:
+            print(f"Missing required properties ('name', 'series' and 'images') for {yaml_doc}")
             sys.exit(1)
 
         self.name = yaml_doc['name']
         self.series = yaml_doc['series']
         self.age = yaml_doc.get('age', [-1])
         self.nicknames = yaml_doc.get('nicknames', [])
-        self.gender = yaml_doc.get('gender', 'F')
+        self.gender = yaml_doc.get('gender', 'F').upper()
         self.height = yaml_doc.get('height', 'Unknown')
         self.rank = yaml_doc.get('rank', '?').upper()
         self.images = yaml_doc.get('images', [])
@@ -50,7 +50,9 @@ class Waifu(object):
         if self.rank not in "?ABCDEFGHIJKLMNOPQRSTUVWXYZ":
             print(f"Invalid rank for {self.name} (Got '{self.rank}', requires '?' or alpha)")
             sys.exit(1)
-
+        if self.gender not in ["M", "F", "MF", "FM", "U"]:
+            print(f"Invalid gender for {self.name} (Got '{self.gender}', accepts only M/F/MF/FM/U")
+            sys.exit(1)
         self.download_images()
 
     """
@@ -59,28 +61,31 @@ class Waifu(object):
     """
     def download_images(self):
         new_images = []
+        im_sizes = []
         for image in self.images:
-            valid, name, palette = download_image_and_palette(self.name, image)
+            valid, name, palette, size = download_image_and_palette(self.name, image)
             if not valid:
                 print(f"Error downloading {image}")
                 continue
 
             new_images.append(name)
             self.palette.append(palette)
+            im_sizes.append(size)
         self.images = new_images
+        self.im_sizes = im_sizes
 
     """
     Get CSV headers, must match __str__
     """
     @staticmethod
     def headers():
-        return "name,series,age,nicknames,height,rank,images,birthday,tags,palette,gender"
+        return "name,series,age,nicknames,height,rank,images,birthday,tags,palette,gender,im_sizes"
 
     """
     Convert to a JSON list style string
     :returns: Formatted string
     """
     def __str__(self):
-        out = [self.name, self.series, self.age, self.nicknames, self.height, self.rank, self.images, self.birthday, self.tags, self.palette, self.gender]
+        out = [self.name, self.series, self.age, self.nicknames, self.height, self.rank, self.images, self.birthday, self.tags, self.palette, self.gender, self.im_sizes]
         return json.dumps(out, separators=(',', ':'))
 
