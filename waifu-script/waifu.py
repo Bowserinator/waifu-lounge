@@ -29,7 +29,7 @@ class Waifu(object):
             print(f"Missing required properties ('name', 'series' and 'images') for {yaml_doc}")
             sys.exit(1)
 
-        self.name = yaml_doc['name']
+        self.name = yaml_doc['name'].strip()
         self.series = yaml_doc['series']
         self.age = yaml_doc.get('age', [-1])
         self.nicknames = yaml_doc.get('nicknames', [])

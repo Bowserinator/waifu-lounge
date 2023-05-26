@@ -1,16 +1,5 @@
 <template>
-    <!--
-TODO:
-better image sizing
-variables
--->
-    <v-lazy
-        class="everything-wrapper"
-        :options="{
-            threshold: .5
-        }"
-        transition="fade-transition"
-    >
+    <div class="everything-wrapper">
         <div>
             <v-card :class="[ 'waifu-card', rankClass ]" :max-width="cardWidth" outlined>
                 <v-card-text>
@@ -60,11 +49,12 @@ variables
                         </v-tooltip>
                     </div>
 
-                    <img
+                    <v-img
                         :src="'/waifu_images/' + waifu.images[imageIndex]"
-                        :height="imageHeight"
+                        :height="imageHeight()"
+                        :width="imageWidth()"
                         class="waifu-image"
-                    >
+                    />
 
                     <div class="d-flex">
                         <div
@@ -94,7 +84,7 @@ variables
                 </v-btn>
             </div>
         </div>
-    </v-lazy>
+    </div>
 </template>
 
 <script>
@@ -134,10 +124,7 @@ export default {
         },
         cardWidth() {
             const size = this.waifu.im_sizes[this.imageIndex];
-            return Math.max(
-                Math.round(250 * size[0] / size[1] + 32),
-                250
-            ); // 250 = img height
+            return Math.min(300, Math.round(200 * size[0] / size[1] + 96));
         }
     },
     methods: {
@@ -152,10 +139,11 @@ export default {
                 this.imageIndex = 0;
         },
         imageHeight() {
+            return 280;
+        },
+        imageWidth() {
             const size = this.waifu.im_sizes[this.imageIndex];
-            if (size[0] > size[1])
-                return 250;
-            return Math.min(360, size[1] / size[0] * (this.cardWidth - 32));
+            return Math.round(Math.min(360, size[0] / size[1] * this.imageHeight()));
         }
     }
 };
@@ -219,8 +207,9 @@ export default {
 .waifu-image {
     border-radius: 3px 3px 0 0;
     max-width: 100%;
-    object-fit: contain;
+    object-fit: cover;
     background: white;
+    background-position: left center;
 }
 
 .palette-color {
@@ -239,7 +228,7 @@ export default {
     font-size: 12pt;
 
     &.female { color: #FF5252; }
-    &.male { color: #42A5F5; } // TODO
+    &.male { color: #42A5F5; }
 }
 
 .truncate {

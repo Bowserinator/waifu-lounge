@@ -33,7 +33,8 @@ Used for waifu image metadata
 """
 def download_image_and_palette(waifu_name, url):
     valid = True
-    local_filename = f"{waifu_name[:16]}_{hashlib.md5(url.encode()).hexdigest()[0:16]}.png"
+    local_filename = f"{waifu_name[:16]}_{hashlib.md5(url.encode()).hexdigest()[0:16]}.png" \
+        .replace("/", "").replace("\\", "")
     out = os.path.join(config.IMAGE_OUTPUT_DIR, local_filename)
     palette = []
     size = (-1, -1)
