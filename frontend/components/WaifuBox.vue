@@ -220,6 +220,7 @@ export default {
 .waifu-name {
     opacity: 1;
     color: white;
+    margin-bottom: 5px;
 }
 
 .gender {
