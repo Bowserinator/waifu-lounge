@@ -28,9 +28,9 @@
             <ol>
                 <li>White hair or kitsunemimi: <code>tag: shirokami,kitsune</code></li>
                 <li>White haired kitsunemimi vtubers: <code>tagall: shirokami,kitsune,vtuber</code></li>
-                <li>Legal waifus: <code>age:>18</code></li>
+                <li>Legal waifus: <code>age:>17</code></li>
                 <li>Not legal waifus: <code>age:&lt;18</code></li>
-                <li>Age 20 to 30: <code>age:20-30</code></li>
+                <li>Age 20 to 30 inclusive: <code>age:20-30</code></li>
                 <li>Age exactly 15: <code>age:15</code></li>
                 <li>S rank waifus: <code>rank:s</code></li>
                 <li>Husbandos or gender ambiguous: <code>gender:m OR gender:mf</code></li>
