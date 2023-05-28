@@ -3,7 +3,8 @@ h1, h2, h3, h4, h5 {
     font-variant: small-caps;
 }
 
-p {
+p, .p-text {
+    margin-bottom: 16px;
     opacity: 0.8;
     max-width: 800px;
 }
