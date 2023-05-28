@@ -1,7 +1,5 @@
 <template>
     <div>
-        {{ averageAge }}<br>
-
         <h1>Waifus</h1><br>
 
         <p>
@@ -24,7 +22,7 @@
         </p>
 
         <b>Examples:</b>
-        <p>
+        <div class="p-text">
             <ol>
                 <li>White hair or kitsunemimi: <code>tag: shirokami,kitsune</code></li>
                 <li>White haired kitsunemimi vtubers: <code>tagall: shirokami,kitsune,vtuber</code></li>
@@ -35,18 +33,87 @@
                 <li>S rank waifus: <code>rank:s</code></li>
                 <li>Husbandos or gender ambiguous: <code>gender:m OR gender:mf</code></li>
             </ol>
-        </p>
+        </div>
 
         <p>
             <b>Special tag alias:</b> <code>kemonomimi</code> is a shorthand for all kemonomimi tags.
         </p>
 
+        <v-dialog
+            v-model="dialog"
+            width="500"
+            overlay-color="black"
+            :overlay-opacity="0.8"
+        >
+            <template #activator="{ on, attrs }">
+                <v-btn
+                    color="green"
+                    dark tile
+                    v-bind="attrs"
+                    v-on="on"
+                >
+                    View Stats
+                </v-btn>
+            </template>
+
+            <v-card>
+                <div style="padding: 20px; max-height: 600px; overflow-y: auto">
+                    <h4>Age</h4>
+                    <p>
+                        <b>Min: </b>{{ ages.min }}  •
+                        <b>Max: </b>{{ ages.max }}  •
+                        <b>Mean: </b>{{ ages.mean }}  •
+                        <b>Median: </b>{{ ages.median }}
+                    </p>
+
+                    <HistogramView
+                        :data="ages.ages"
+                        :bin-size="3" :hide-empty-bins="true"
+                        bar-color="#5C6BC0"
+                    />
+
+                    <br>
+                    <h4>Height (CM)</h4>
+
+                    <p>
+                        <b>Min: </b>{{ heights.min }}  •
+                        <b>Max: </b>{{ heights.max }}  •
+                        <b>Mean: </b>{{ heights.mean }}  •
+                        <b>Median: </b>{{ heights.median }}
+                    </p>
+
+                    <HistogramView
+                        :data="heights.heights"
+                        :bin-size="4" :hide-empty-bins="true"
+                        bar-color="#F44336"
+                    />
+
+                    <br>
+                    <h4>Tags</h4>
+
+                    <div v-for="tag in commonTags" :key="tag[0]" class="tag-stats-tag">
+                        {{ tag[0] }} ({{ tag[1] }})
+                    </div>
+                </div>
+
+                <v-divider />
+
+                <v-card-actions>
+                    <v-spacer />
+                    <v-btn
+                        color="primary" text
+                        @click="dialog = false"
+                    >
+                        Close
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+        <br><br>
         <v-divider />
         <br>
 
-        <!--
-- oclor chart + age chart + count
-        -->
         <v-card class="search-header">
             <v-text-field
                 v-model="search"
@@ -148,7 +215,8 @@ export default {
         return {
             search: '',
             sortBy: 'Rating',
-            sortOrder: false
+            sortOrder: false,
+            dialog: false
         };
     },
     computed: {
@@ -303,19 +371,64 @@ export default {
                 return invert * (a < b ? -1 : 1);
             });
         },
-        averageAge() {
-            let filteredAges = waifus.filter(w => w.age[0] >= 0);
+        ages() {
+            const ages = waifus.filter(w => w.age[0] >= 0).map(w => w.age).flat(1).sort((a, b) => a - b);
+            return {
+                ages,
+                min: ages[0],
+                max: ages[ages.length - 1],
+                mean: (ages.reduce((a, b) => a + b) / ages.length).toFixed(2),
+                median: ages[Math.floor(ages.length / 2)]
+            };
+        },
+        heights() {
+            const heights = waifus
+                .filter(w => w.height !== 'Unknown')
+                .map(w => {
+                    w = w.height.toLowerCase();
+                    const val = +w.split(/[^0-9]/g)[0];
 
-            filteredAges = filteredAges.map(w => w.age[0]);
-            filteredAges.sort();
-            return waifus.filter(w => w.age[0] > 0 && w.age[0] < 15).map(w => w.name);
+                    if (w.endsWith('m') && !w.endsWith('cm'))
+                        return 100 * val;
+                    else if (w.includes('\'')) { // A'B" or A'B
+                        w = w.split('\'');
+                        return 2.54 * (+w[0] * 12 + +w[1].replace('"', ''));
+                    }
+                    return val;
+                })
+                .sort((a, b) => a - b);
+            return {
+                heights,
+                min: heights[0],
+                max: heights[heights.length - 1],
+                mean: (heights.reduce((a, b) => a + b) / heights.length).toFixed(2),
+                median: heights[Math.floor(heights.length / 2)]
+            };
+        },
+        commonTags() {
+            const tags = waifus.map(w => w.tags).flat(1);
+            const counts = {};
+            for (let tag of tags) {
+                if (!counts[tag]) counts[tag] = 0;
+                counts[tag]++;
+            }
+            return Object.keys(counts).map(k => ([k, counts[k]])).sort((a, b) => (b[1] - a[1]));
         }
     }
 };
 </script>
 
-
 <style lang="scss">
+.tag-stats-tag {
+    border-radius: 9999px;
+    background: #eee;
+    padding: 0 4px;
+    color: black;
+    display: inline-block;
+    margin: 2px 4px 2px 0;
+    font-size: 11pt;
+}
+
 .sort-options {
     $sort-line-height: 40px;
 
@@ -341,7 +454,7 @@ export default {
     position: sticky;
     top: 0;
     padding: 10px;
-    z-index: 99999;
+    z-index: 5;
     max-width: calc(800px + 20px); // search bar + padding
 
     // Override card style
